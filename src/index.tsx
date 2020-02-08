@@ -7,12 +7,21 @@ import EditableContent from './EditableContent';
 import { Pair } from './Pair';
 import EditablePair from './EditablePair';
 
+import CssBaseline from '@material-ui/core/CssBaseline';
+import { ThemeProvider } from '@material-ui/core/styles';
+import theme from './theme';
 
 function App() {
     const [storedPair, setStoredPair] = useState(new Pair());
     const [storedText, setStoredText] = useState("Here's some more, edit away!");
 
     return (
+        // <head>
+        //     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
+
+        //     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+        // </head>
+
         <div className="App">
             <h1>Categories</h1>
             <p>
@@ -29,7 +38,13 @@ function App() {
 }
 
 const rootElement = document.getElementById("root");
-ReactDOM.render(<App />, rootElement);
+ReactDOM.render(
+    <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <App />
+    </ThemeProvider>
+
+    , rootElement);
 
 
 // ReactDOM.render(<Card />, document.getElementById('root'));
