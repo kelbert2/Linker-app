@@ -7,10 +7,6 @@ import EditableContent from './EditableContent';
 import { Pair } from './Pair';
 import EditablePair from './EditablePair';
 
-import CssBaseline from '@material-ui/core/CssBaseline';
-import { ThemeProvider } from '@material-ui/core/styles';
-import theme from './theme';
-
 function App() {
     const [storedPair, setStoredPair] = useState(new Pair());
     const [storedText, setStoredText] = useState("Here's some more, edit away!");
@@ -39,11 +35,7 @@ function App() {
 
 const rootElement = document.getElementById("root");
 ReactDOM.render(
-    <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <App />
-    </ThemeProvider>
-
+    <App />
     , rootElement);
 
 
