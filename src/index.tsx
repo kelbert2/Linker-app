@@ -4,7 +4,7 @@ import './index.css';
 import Card from './Card';
 import * as serviceWorker from './serviceWorker';
 import EditableContent from './EditableContent';
-import Pair from './Pair';
+import { Pair } from './Pair';
 import EditablePair from './EditablePair';
 
 
@@ -14,13 +14,13 @@ function App() {
 
     return (
         <div className="App">
-            <h1>Inline Text Edit with React Hooks</h1>
-            <h2>
+            <h1>Categories</h1>
+            <p>
                 <EditablePair
                     pair={storedPair}
                     onSet={(pair: Pair) => setStoredPair(pair)}
                 />
-            </h2>
+            </p>
             <p>
                 <EditableContent text={storedText} onSetText={text => setStoredText(text)} />
             </p>

@@ -13,29 +13,12 @@ body {
   margin: 4rem 10rem;
 }
 
-/* these make sure it can work in any text element */
-.inline--active,
-.inline-input--active {
-  font: inherit;
-  color: inherit;
-  text-align: inherit;
-  padding: 0;
-  background: none;
-  border: none;
-  border-bottom: 1px dashed #999999;
-  outline: none;
-}
-
-.inline--active {
-  cursor: pointer;
-}
-
-.inline--hidden,
-.inline-input--hidden {
+.editing--hidden,
+.editing-input--hidden {
   display: none;
 }
 
-.inline-input--active {
-  border-bottom: 1px solid #666666;
-  text-align: left;
+.editing--active,
+.editing-input--active {
+  display: inline-block;
 }

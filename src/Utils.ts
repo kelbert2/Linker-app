@@ -3,13 +3,13 @@ import { Pair } from './Pair';
 const uuid = require('uuid');
 
 export enum ValueType {
-    String,
-    Number,
-    Date,
-    StringArray,
-    NumberArray,
-    DateArray,
-    PairArray
+    String = "String",
+    Number = "Number",
+    Date = "Date",
+    StringArray = "Array of Strings",
+    NumberArray = "Array of Numbers",
+    DateArray = "Array of Dates",
+    PairArray = "Array of Pairs"
 }
 export class Utils {
 
@@ -67,10 +67,6 @@ export class Utils {
     static typeValidation(value: any, valueType: ValueType): boolean {
         return (this.getValueType(value) === valueType);
     }
-
-
-
-
 }
 // from Gabe Ragland's https://usehooks.com/useKeyPress/
 export function useKeyPress(targetKey: string) {
