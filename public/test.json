@@ -1,0 +1,59 @@
+[{
+    "title": {
+        "label": "Person",
+        "value": "Kris Elbert",
+        "uid": "0"
+    },
+    "content": [{
+            "label": "First Name",
+            "value": "Kristianna"
+        },
+        {
+            "label": "Last Name",
+            "value": "Elbert"
+        },
+        {
+            "label": "Nicknames",
+            "value": ["Kris"]
+        },
+        {
+            "label": "Attributes",
+            "value": ["Puts in a lot of effort", "Pursues perfection", "Detail-oriented"]
+        },
+        {
+            "label": "Event",
+            "value": "Birthday",
+            "uid": "1"
+        },
+        {
+            "label": "Favorite numbers",
+            "value": [2, 5, 7, 0]
+        },
+        {
+            "title": "Pets",
+            "value": [{
+                "label": "Cat",
+                "value": "Jenna"
+            }, {
+                "label": "Fish",
+                "value": "Pebbles"
+            }]
+        }
+    ]
+}, {
+    "title": {
+        "label": "Event",
+        "value": "Birthdate",
+        "uid": "1"
+    },
+    "content": [{
+            "label": "Date",
+            "value": "4/22/97"
+        },
+        {
+            "label": "Baby",
+            "value": "Kris Elbert",
+            "uid": "0"
+        }
+    ]
+}]
