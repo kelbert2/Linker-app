@@ -7,7 +7,35 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+.App {
+  font-family: sans-serif;
+  text-align: left;
+  margin: 4rem 10rem;
+}
+
+/* these make sure it can work in any text element */
+.inline--active,
+.inline-input--active {
+  font: inherit;
+  color: inherit;
+  text-align: inherit;
+  padding: 0;
+  background: none;
+  border: none;
+  border-bottom: 1px dashed #999999;
+  outline: none;
+}
+
+.inline--active {
+  cursor: pointer;
+}
+
+.inline--hidden,
+.inline-input--hidden {
+  display: none;
+}
+
+.inline-input--active {
+  border-bottom: 1px solid #666666;
+  text-align: left;
 }

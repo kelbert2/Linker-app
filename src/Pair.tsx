@@ -12,11 +12,11 @@ export class Pair {
     value: string | number | Date | string[] | number[] | Date[] | Pair[];
     readonly uid?: string;
     valueType?: ValueType;
-    constructor(props: PairProps) {
-        this.label = props.pair.label ? props.pair.label : "label";
-        this.value = props.pair.value ? props.pair.value : "value";
-        this.uid = props.pair.uid ? props.pair.uid : Utils.generateUID();
-        this.valueType = props.pair.valueType ? props.pair.valueType : ValueType.String;
+    constructor(props?: PairProps) {
+        this.label = props?.pair.label ? props.pair.label : "label";
+        this.value = props?.pair.value ? props.pair.value : "value";
+        this.uid = props?.pair.uid ? props.pair.uid : Utils.generateUID();
+        this.valueType = props?.pair.valueType ? props.pair.valueType : ValueType.String;
     }
 
 }

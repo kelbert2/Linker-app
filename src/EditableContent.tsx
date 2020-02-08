@@ -1,5 +1,6 @@
-import React, { Component, useEffect, useState, useRef } from 'react';
-import { useKeyPress, useOnClickOutide } from './Utils';
+import React, { useEffect, useState, useRef, Component } from 'react';
+import { useKeyPress, useOnClickOutside } from './Utils';
+import './index.css';
 /*interface EditableContentProps {
     domElement,
     onSave,
@@ -91,9 +92,10 @@ function editable(WrappedComponent: Component) {
 // Note: may need to sanitize input before saving
 // TODO: look into DOM Purify
 interface EditableContentProps {
-    text: string
+    text: string;
     onSetText(value: string): void;
 }
+
 function EditableContent(props: EditableContentProps) {
     // With Hooks:
     const [isEditing, setEditing] = useState(false);
@@ -107,15 +109,15 @@ function EditableContent(props: EditableContentProps) {
     const enterEvent = useKeyPress('Enter');
     const escEvent = useKeyPress('Escape');
 
+    // focus the cursor in the input field when editing starts
     useEffect(() => {
-        // focus the cursor in the input field when editing starts
-        if (isEditing && inputRef && inputRef.current) {
+        if (isEditing && inputRef.current) {
             inputRef.current.focus();
         }
     }, [isEditing]);
 
+    // watches for key presses and responds
     useEffect(() => {
-        // watches for key presses and responds
         if (isEditing) {
             if (enterEvent) {
                 props.onSetText(inputValue);
@@ -128,7 +130,7 @@ function EditableContent(props: EditableContentProps) {
         }
     }, [enterEvent, escEvent]); // watch these key presses
 
-    useOnClickOutide(wrapperRef, () => {
+    useOnClickOutside(wrapperRef, () => {
         // watches for clicks outside to save and close the editor
         if (isEditing) {
             props.onSetText(inputValue);
@@ -143,15 +145,15 @@ function EditableContent(props: EditableContentProps) {
             <span
                 ref={textRef}
                 onClick={() => setEditing(true)}
-                className={`inline inline--${!isEditing ? "active" : "rest"}`}>
+                className={`inline inline--${!isEditing ? "active" : "hidden"}`}>
                 {props.text}
             </span>
             <input
                 ref={inputRef}
                 value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                style={{ width: Math.ceil(inputValue.length * 0.9) + "ex" }}
-                className={`inline-input inline-input--${isEditing ? "active" : "rest"}`} />
+                onChange={e => setInputValue(e.target.value)}
+                style={{ minWidth: Math.ceil(inputValue.length) + "ch" }}
+                className={`inline-input inline-input--${isEditing ? "active" : "hidden"}`} />
         </span>
     );
 }

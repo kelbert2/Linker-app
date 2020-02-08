@@ -109,7 +109,7 @@ export function useKeyPress(targetKey: string) {
  that will cause this effect callback/cleanup to run every render. 
  It's not a big deal, but to optimize you can wrap handler in useCallback before passing it into this hook.
  */
-export function useOnClickOutide<T extends HTMLElement>(ref: RefObject<T>, handler: (e: Event) => any) {
+export function useOnClickOutside<T extends HTMLElement>(ref: RefObject<T>, handler: (e: Event) => any) {
     useEffect(
         () => {
             const listener = (e: Event) => {
