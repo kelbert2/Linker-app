@@ -28,10 +28,10 @@ function App() {
 
         <div className="App">
             <h1>Categories</h1>
-            <div><Card
+            <Card
                 title={storedPair}
                 content={storedContent}
-            /></div>
+            />
             <div>
                 <EditablePair
                     pair={storedContent[1]}

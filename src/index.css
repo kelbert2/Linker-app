@@ -23,6 +23,25 @@ body {
   display: inline-block;
 }
 
+.pair {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  align-content: center;
+}
+
+.pair div {
+  margin: 1rem .25em 0;
+}
+
+.pair button {
+  margin: 0 .25em;
+}
+
+.pair select {
+  margin: 5em;
+}
+
 .input-field>label {
   -webkit-transform: translateY(-14px) scale(0.8);
   transform: translateY(-14px) scale(0.8);
@@ -30,15 +49,15 @@ body {
   transform-origin: 0 0;
 }
 
-.pair {
-  display: flex;
-  justify-content: flex-start;
+.card {
+  font-weight: bold;
 }
 
-.pair div {
-  margin: 0 .25em;
+.card li {
+  font-weight: normal;
 }
 
 .card {
-  padding: .125em;
+  padding: .75em;
+  border-radius: .5em;
 }

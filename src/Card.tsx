@@ -92,10 +92,7 @@ function Card(props: CardProperties) {
             className="card">
             {renderTitle()}
             <ul>
-                <li
-                    className="card">
-                    {renderContent()}
-                </li>
+                {renderContent()}
             </ul>
         </div>
 
