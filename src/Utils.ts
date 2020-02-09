@@ -3,6 +3,15 @@ import { Pair } from './Pair';
 const uuid = require('uuid');
 
 export enum ValueType {
+    String,
+    Number,
+    Date,
+    StringArray,
+    NumberArray,
+    DateArray,
+    PairArray
+}
+export enum ValueTypeString {
     String = "String",
     Number = "Number",
     Date = "Date",
@@ -11,7 +20,30 @@ export enum ValueType {
     DateArray = "Array of Dates",
     PairArray = "Array of Pairs"
 }
+
+
 export class Utils {
+    static getValueTypeFromIndex(index: number): ValueType | undefined {
+        switch (index) {
+            case 0:
+                return ValueType.String;
+            case 1:
+                return ValueType.Number;
+            case 2:
+                return ValueType.Date;
+            case 3:
+                return ValueType.StringArray;
+            case 4:
+                return ValueType.NumberArray;
+            case 5:
+                return ValueType.DateArray;
+            case 6:
+                return ValueType.PairArray;
+            default:
+                return undefined;
+
+        }
+    }
 
 
     static generateUID(): string {

@@ -1,8 +1,9 @@
-import React, { useState, useReducer, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Pair } from './Pair';
-import { ValueType, Utils, useKeyPress, useOnClickOutside } from './Utils';
-//const { TextInput } = require('react-materialize');
-// import { TextInput, Button } from 'react-materialize';
+import { ValueType, ValueTypeString, Utils, useKeyPress, useOnClickOutside } from './Utils';
+import { DatePicker } from '@y0c/react-datepicker';
+import '@y0c/react-datepicker/assets/styles/calendar.scss';
+
 
 
 interface EditablePair {
@@ -14,13 +15,13 @@ function EditablePair(props: EditablePair) {
     const [isEditing, setEditing] = useState(false);
     //const [pair, setPair] = useState({ label: '', value: '', uid: Utils.generateUID(), valueType: ValueType.String } as Pair)
     const [pair, setPair] = useState(new Pair({ label: '', value: '' }));
-    const [isDate, setIsDate] = useState(false);
+    // const [isDate, setIsDate] = useState(false);
 
     const wrapperRef = useRef(null);
     const pairRef = useRef<HTMLSpanElement>(null);
     const inputLabelRef = useRef<HTMLInputElement>(null);
     const inputValueRef = useRef<HTMLInputElement>(null);
-    const inputValueTypeRef = useRef<HTMLInputElement>(null);
+    const inputValueTypeRef = useRef<HTMLSelectElement>(null);
 
     const uidLabel = Utils.generateUID();
     const uidValue = Utils.generateUID();
@@ -29,14 +30,17 @@ function EditablePair(props: EditablePair) {
 
     const enterEvent = useKeyPress('Enter');
     const escEvent = useKeyPress('Escape');
+
     const save = () => {
         props.onSet(pair);
         setEditing(false);
     };
+
     const cancel = () => {
         setPair({ label: props.pair.label, value: props.pair.value, valueType: props.pair.valueType });
         setEditing(false);
     };
+
     useEffect(() => {
         if (isEditing) {
             if (inputValueRef.current) {
@@ -49,13 +53,13 @@ function EditablePair(props: EditablePair) {
         }
     }, [isEditing]);
 
-    useEffect(() => {
-        if (isDate) {
-            if (inputValueRef.current) {
-                inputValueRef.current.focus();
-            }
-        }
-    }, [isDate]);
+    // useEffect(() => {
+    //     if (isDate) {
+    //         if (inputValueRef.current) {
+    //             inputValueRef.current.focus();
+    //         }
+    //     }
+    // }, [isDate]);
 
     useEffect(() => {
         if (isEditing) {
@@ -75,23 +79,71 @@ function EditablePair(props: EditablePair) {
             setEditing(false);
         }
     });
+    const renderInputValue = () => {
+        console.log('pair value type: ' + pair.valueType);
+        console.log('pair value: ' + pair.value);
+
+        if (pair.valueType === ValueType.Date) {
+            return (
+                <DatePicker
+                    value={pair.value as string}
+                    onChange={e => setPair({ ...pair, value: e.toString() })} />
+            );
+        } else {
+            return (
+                <input
+                    placeholder="Value"
+                    id={uidValue}
+                    ref={inputValueRef}
+                    value={pair.value as string}
+                    onChange={e => setPair({ ...pair, value: e.target.value })}
+                    className={`editing--${isEditing ? "active" : "hidden"}`} />
+            );
+        }
+    }
+
+
+    //     switch (pair.valueType) {
+    //         case ValueType.Date: {
+    //             return (
+    //                 <DatePicker onChange={e => setPair({ ...pair, value: e.toString() })} />
+    //             );
+    //         }
+    //         default: {
+    //             return (
+    //                 <input
+    //                     placeholder="Value"
+    //                     id={uidValue}
+    //                     ref={inputValueRef}
+    //                     value={pair.value as string}
+    //                     onChange={e => setPair({ ...pair, value: e.target.value })}
+    //                     className={`editing--${isEditing ? "active" : "hidden"}`} />
+    //             );
+    //         }
+    //     }
+    // }
 
     const renderOptions = () => {
-        // Object.keys(ValueType).map(key => {
-        //     return (
-        //         <option value={key}>{ValueType[key]}</option>
-        //     );
-        // });
+
+        console.log("rendering options");
+
         return (
             Object.values(ValueType).map((item, index) => {
                 if (Number.isNaN(Number(item))) {
                     return (
-                        <option value={item}>{item}</option>
+                        <option value={index}>{item}</option>
                     );
                 }
             })
         );
     };
+
+    const valueTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        console.log("Selection of value type changed to: " + ValueType[+e.target.value] + ", raw: " + e.target.value);
+
+        setPair({...pair, valueType: Utils.getValueTypeFromIndex(+e.target.value)});
+    }
+
     return (
         <div
             ref={wrapperRef}
@@ -116,57 +168,53 @@ function EditablePair(props: EditablePair) {
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPair({ ...pair, value: e.target.value })}
                 className={`editing--${isEditing ? "active" : "hidden"}`}
             /> */}
-            <label
-                htmlFor={uidLabel}
-                className={`editing--${isEditing ? "active" : "hidden"}`} >Label </label>
-            <input
-                placeholder="Label"
-                id={uidLabel}
-                ref={inputLabelRef}
-                value={pair.label}
-                onChange={e => setPair({ ...pair, label: e.target.value })}
-                className={`editing--${isEditing ? "active" : "hidden"}`} />
 
-            <label
-                htmlFor={uidValue}
-                className={`editing--${isEditing ? "active" : "hidden"}`} >
-                Value </label>
-            <input
-                placeholder="Value"
-                id={uidValue}
-                ref={inputValueRef}
-                value={pair.value as string}
-                type={`${isDate ? "date" : "text"}`}
-                onChange={e => setPair({ ...pair, value: e.target.value })}
-                className={`${isDate ? "datepicker" : ""} editing--${isEditing ? "active" : "hidden"}`} />
+            <div className={`editing-input--${isEditing ? "active" : "hidden"}`}>
+                <div className="input-field inline">
+                <input
+                    placeholder="Label"
+                    id={uidLabel}
+                    ref={inputLabelRef}
+                    value={pair.label}
+                    type="text"
+                    onChange={e => setPair({ ...pair, label: e.target.value })} />
+                    <label
+                    htmlFor={uidLabel}>
+                    Label </label>
+                    </div>
 
-            <label
-                htmlFor={uidValueType}
-                className={`editing--${isEditing ? "active" : "hidden"}`} >
-                Value Type </label>
-            <select
-                className={`editing--${isEditing ? "active" : "hidden"}`} >
-                {renderOptions()}
-            </select>
-            {/* <input
-                placeholder="Value Type"
-                id={uidValueType}
-                ref={inputValueTypeRef}
-                value={pair.valueType}
-                onChange={e => setPair({ ...pair, valueType: e.target.value })}
-               className={`inline-input inline-input--${isEditing ? "active" : "hidden"}`} />
-            {/* Need validator to convert to proper type before can add type choice */}
+                    <div className="input-field inline">
+                {renderInputValue()}
+                <label
+                    htmlFor={uidValue}>
+                    Value </label>
+                    </div>
 
-            <button
-                onClick={() => cancel()}
-                className={`waves-effect waves-teal btn-flat editing-input--${isEditing ? "active" : "hidden"}`}>
-                Cancel
+                    <div className="input-field">
+                <select
+                    defaultValue={ValueType.String}
+                    id={uidValueType}
+                    ref={inputValueTypeRef}
+                    onChange={e => valueTypeChange(e)}
+                    className={`editing-input--${isEditing ? "active" : "hidden"}`}>
+                    {renderOptions()}
+                </select>
+                <label
+                    htmlFor={uidValueType}>
+                    Value Type </label>
+                    </div>
+
+                <button
+                    onClick={() => cancel()}
+                    className="waves-effect waves-teal btn-flat">
+                    Cancel
                     </button>
-            <button
-                onClick={() => save()}
-                className={`waves-effect waves-light btn editing-input--${isEditing ? "active" : "hidden"}`}>
-                Save
+                <button
+                    onClick={() => save()}
+                    className="waves-effect waves-light btn">
+                    Save
                     </button>
+            </div>
         </div>
     );
 }

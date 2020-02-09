@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react';
+import React, { Component } from 'react';
 import PairForm, { Pair, PairComp } from './Pair';
 import { Utils } from './Utils';
 import EditableContent from './EditableContent';

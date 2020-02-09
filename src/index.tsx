@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import Card from './Card';
 import * as serviceWorker from './serviceWorker';
 import EditableContent from './EditableContent';
 import { Pair } from './Pair';
@@ -20,15 +19,15 @@ function App() {
 
         <div className="App">
             <h1>Categories</h1>
-            <p>
+            <div>
                 <EditablePair
                     pair={storedPair}
                     onSet={(pair: Pair) => setStoredPair(pair)}
                 />
-            </p>
-            <p>
+            </div>
+            <div>
                 <EditableContent text={storedText} onSetText={text => setStoredText(text)} />
-            </p>
+            </div>
         </div>
     );
 }
