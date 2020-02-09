@@ -1,20 +1,20 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Pair } from './Pair';
-import { ValueType, ValueTypeString, Utils, useKeyPress, useOnClickOutside } from './Utils';
+import { ValueType, Utils, useKeyPress, useOnClickOutside } from './Utils';
 import { DatePicker } from '@y0c/react-datepicker';
 import '@y0c/react-datepicker/assets/styles/calendar.scss';
 
-
-
 interface EditablePair {
-    onSet: (pair: Pair) => any | void;
+    onSet: (pair: Pair, key: number) => any | void;
     pair: Pair;
+    key: number;
 }
 function EditablePair(props: EditablePair) {
+    const key = props.key;
 
     const [isEditing, setEditing] = useState(false);
-    //const [pair, setPair] = useState({ label: '', value: '', uid: Utils.generateUID(), valueType: ValueType.String } as Pair)
-    const [pair, setPair] = useState(new Pair({ label: '', value: '' }));
+    const [pair, setPair] = useState(props.pair);
+    // const [pair, setPair] = useState(new Pair({ label: 'lab', value: 'val' }));
     // const [isDate, setIsDate] = useState(false);
 
     const wrapperRef = useRef(null);
@@ -32,7 +32,7 @@ function EditablePair(props: EditablePair) {
     const escEvent = useKeyPress('Escape');
 
     const save = () => {
-        props.onSet(pair);
+        props.onSet(pair, key);
         setEditing(false);
     };
 
@@ -75,13 +75,13 @@ function EditablePair(props: EditablePair) {
     useOnClickOutside(wrapperRef, () => {
         // watches for clicks outside to save and close the editor
         if (isEditing) {
-            props.onSet(pair);
+            props.onSet(pair, key);
             setEditing(false);
         }
     });
     const renderInputValue = () => {
-        console.log('pair value type: ' + pair.valueType);
-        console.log('pair value: ' + pair.value);
+        // console.log('pair value type: ' + pair.valueType);
+        // console.log('pair value: ' + pair.value);
 
         if (pair.valueType === ValueType.Date) {
             return (
@@ -92,7 +92,6 @@ function EditablePair(props: EditablePair) {
         } else {
             return (
                 <input
-                    placeholder="Value"
                     id={uidValue}
                     ref={inputValueRef}
                     value={pair.value as string}
@@ -101,7 +100,6 @@ function EditablePair(props: EditablePair) {
             );
         }
     }
-
 
     //     switch (pair.valueType) {
     //         case ValueType.Date: {
@@ -125,7 +123,7 @@ function EditablePair(props: EditablePair) {
 
     const renderOptions = () => {
 
-        console.log("rendering options");
+        // console.log("rendering options");
 
         return (
             Object.values(ValueType).map((item, index) => {
@@ -134,14 +132,15 @@ function EditablePair(props: EditablePair) {
                         <option value={index}>{item}</option>
                     );
                 }
+                // return undefined;
             })
         );
     };
 
     const valueTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        console.log("Selection of value type changed to: " + ValueType[+e.target.value] + ", raw: " + e.target.value);
+        // console.log("Selection of value type changed to: " + ValueType[+e.target.value] + ", raw: " + e.target.value);
 
-        setPair({...pair, valueType: Utils.getValueTypeFromIndex(+e.target.value)});
+        setPair({ ...pair, valueType: Utils.getValueTypeFromIndex(+e.target.value) });
     }
 
     return (
@@ -171,38 +170,37 @@ function EditablePair(props: EditablePair) {
 
             <div className={`editing-input--${isEditing ? "active" : "hidden"}`}>
                 <div className="input-field inline">
-                <input
-                    placeholder="Label"
-                    id={uidLabel}
-                    ref={inputLabelRef}
-                    value={pair.label}
-                    type="text"
-                    onChange={e => setPair({ ...pair, label: e.target.value })} />
+                    <input
+                        id={uidLabel}
+                        ref={inputLabelRef}
+                        value={pair.label}
+                        type="text"
+                        onChange={e => setPair({ ...pair, label: e.target.value })} />
                     <label
-                    htmlFor={uidLabel}>
-                    Label </label>
-                    </div>
+                        htmlFor={uidLabel}>
+                        Label </label>
+                </div>
 
-                    <div className="input-field inline">
-                {renderInputValue()}
-                <label
-                    htmlFor={uidValue}>
-                    Value </label>
-                    </div>
+                <div className="input-field inline">
+                    {renderInputValue()}
+                    <label
+                        htmlFor={uidValue}>
+                        Value </label>
+                </div>
 
-                    <div className="input-field">
-                <select
-                    defaultValue={ValueType.String}
-                    id={uidValueType}
-                    ref={inputValueTypeRef}
-                    onChange={e => valueTypeChange(e)}
-                    className={`editing-input--${isEditing ? "active" : "hidden"}`}>
-                    {renderOptions()}
-                </select>
-                <label
-                    htmlFor={uidValueType}>
-                    Value Type </label>
-                    </div>
+                <div className="input-field inline">
+                    <select
+                        defaultValue={ValueType.String}
+                        id={uidValueType}
+                        ref={inputValueTypeRef}
+                        onChange={e => valueTypeChange(e)}
+                        className={`editing-input--${isEditing ? "active" : "hidden"}`}>
+                        {renderOptions()}
+                    </select>
+                    <label
+                        htmlFor={uidValueType}>
+                        Value Type </label>
+                </div>
 
                 <button
                     onClick={() => cancel()}

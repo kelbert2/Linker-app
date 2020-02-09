@@ -29,3 +29,16 @@ body {
   -webkit-transform-origin: 0 0;
   transform-origin: 0 0;
 }
+
+.pair {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.pair div {
+  margin: 0 .25em;
+}
+
+.card {
+  padding: .125em;
+}

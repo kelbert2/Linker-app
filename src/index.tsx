@@ -5,10 +5,19 @@ import * as serviceWorker from './serviceWorker';
 import EditableContent from './EditableContent';
 import { Pair } from './Pair';
 import EditablePair from './EditablePair';
+import Card from './Card';
 
 function App() {
-    const [storedPair, setStoredPair] = useState(new Pair());
+    const [storedPair, setStoredPair] = useState(new Pair({ label: "Labelll", value: "Vallluee" }));
     const [storedText, setStoredText] = useState("Here's some more, edit away!");
+
+    const [storedContent, setStoredContent] = useState([{ label: "lab1", value: "val1" }, { label: "lab2", value: "val2" }] as Pair[]);
+
+    const updateContent = (pair: Pair, index: number) => {
+        const newContent = [...storedContent];
+        newContent[index] = pair;
+        setStoredContent(newContent);
+    }
 
     return (
         // <head>
@@ -19,15 +28,20 @@ function App() {
 
         <div className="App">
             <h1>Categories</h1>
+            <div><Card
+                title={storedPair}
+                content={storedContent}
+            /></div>
             <div>
                 <EditablePair
-                    pair={storedPair}
-                    onSet={(pair: Pair) => setStoredPair(pair)}
+                    pair={storedContent[1]}
+                    onSet={(pair: Pair) => updateContent(pair, 1)}
+                    key={1}
                 />
             </div>
-            <div>
+            {/* <div>
                 <EditableContent text={storedText} onSetText={text => setStoredText(text)} />
-            </div>
+            </div> */}
         </div>
     );
 }

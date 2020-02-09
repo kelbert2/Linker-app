@@ -23,55 +23,12 @@ export class Pair {
         this.value = props?.value ? props.value : "value";
         this.uid = props?.uid ? props.uid : Utils.generateUID();
         this.valueType = props?.valueType ? props.valueType : ValueType.String;
-
-    }
-}
-export interface PairProps {
-    pair: Pair,
-    onInteraction: any
-}
-export interface PairFormProps {
-    addPair: any
-}
-
-
-export const PairComp = (props: PairProps) => {
-    return (
-        <div
-            onClick={props.onInteraction}
-        >
-            {props.pair.label}: {props.pair.value}
-        </div>
-    );
-}
-
-class PairForm extends Component {
-    uidLabel: string;
-    uidValue: string;
-
-    constructor(props: PairFormProps) {
-        super(props);
-        this.uidLabel = Utils.generateUID();
-        this.uidValue = Utils.generateUID();
     }
 
-    addPair() {
-
-    }
-    render() {
-        const uidLabel = this.uidLabel;
-        const uidValue = this.uidValue;
-        return (
-            <form >
-                <label htmlFor={uidLabel}>Label: </label><input placeholder="Label" id={uidLabel}></input>
-                <label htmlFor={uidValue}>Value: </label><input placeholder="Value" id={uidValue}></input>
-                <button type="submit">Add</button>
-            </form>
-        );
-        // onSubmit={this.props.addPair}
+    public toString = () => {
+        return this.label + ": " + this.value;
     }
 }
-export default PairForm;
 
 // With Hooks:
 /*

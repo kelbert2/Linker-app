@@ -1,83 +1,121 @@
-import React, { Component } from 'react';
-import PairForm, { Pair, PairComp } from './Pair';
-import { Utils } from './Utils';
-import EditableContent from './EditableContent';
+import React, { Component, useState } from 'react';
+import { Pair } from './Pair';
+import EditablePair from './EditablePair';
 
-export class CardProperties {
-    public title: Pair;
-    public content?: Pair[];
-
-    constructor(title: Pair = { label: "Title", value: "Name" }, content?: Pair[]) {
-        this.title = title;
-        this.content = content;
-    }
+export interface CardProperties {
+    title: Pair;
+    content?: Pair[];
 }
 
-class Card extends Component {
-    private history: number = 10;
+function Card(props: CardProperties) {
+    const [title, setTitle] = useState(props.title as Pair);
 
-    state = {
-        title: {
-            label: "Title",
-            value: "Name",
-            uid: Utils.generateUID()
-        } as Pair,
-        content: [
-            { label: "Subtype1", value: "name1", uid: '1' },
-            { label: "subtype2", value: "name2", uid: '2' }
-        ] as Pair[],
-        storedText: "Placeholder"
-    }
+    const [content, setContent] = useState(props.content ? props.content : [{ label: '', value: '' }] as Pair[]);
 
-    // const [title, setTitle] = useState( {label: "Title", value: "Name", uid: Utils.generateUID()} as Pair);
+    // const [title, setTitle] = useState(new Pair({ label: "Title", value: "Name" }) as Pair);
 
     // const [content, setContent] = useState([
     //     { label: "Subtype1", value: "name1", uid: '1' },
     //     { label: "subtype2", value: "name2", uid: '2' }
     // ] as Pair[]);
 
-    handleInteraction(i: number) {
-        // const content = this.state.content.slice();
-        const prevState = this.state;
-        // duplicate the array to replace rather than mutate
-        // this.setState({content[i]: "edited"});
-    }
-    addPair = () => {
+    // state = {
+    //     title: {
+    //         label: "Title",
+    //         value: "Name",
+    //         uid: Utils.generateUID()
+    //     } as Pair,
+    //     content: [
+    //         { label: "Subtype1", value: "name1", uid: '1' },
+    //         { label: "subtype2", value: "name2", uid: '2' }
+    //     ] as Pair[],
+    //     storedText: "Placeholder"
+    // }
 
-    }
-    renderPair(i: number) {
+    const history: number = 10;
+
+    // handleInteraction(i: number) {
+    //     // const content = this.state.content.slice();
+    //     const prevState = this.state;
+    //     // duplicate the array to replace rather than mutate
+    //     // this.setState({content[i]: "edited"});
+    // }
+
+
+    const renderPair = (pair: Pair, key: number, set: (pair: Pair, key: number) => any | void) => {
         return (
-            <li>
-                <PairComp
-                    pair={this.state.content[i]}
-                    onInteraction={() => this.handleInteraction(i)}
-                />
-            </li>
+            <EditablePair
+                key={key}
+                pair={pair}
+                onSet={(pair: Pair) => set(pair, key)}
+            />
+            //onSet={(pair: Pair) => updateContent(pair, 1)}
         );
     }
-    render() {
-        const pairComps = this.state.content.map((pair, i) => {
-            return this.renderPair(i);
-        }
-        );
+    const updateTitle = (pair: Pair, key: number) => {
+        setTitle(pair);
+    }
 
-        return (
-            //<h1>{this.state.title.label}: {this.state.title.value}</h1>
-            // <PairForm />
-            // {(let i=0; i < this.content.length; i++){
-            //     this.renderPair(item);
-            // }
-            // }
+    const renderTitle = () => {
+        return renderPair(title, 0, updateTitle);
+    }
+
+    const addContent = (pair: Pair, key: number) => {
+
+        // console.log('received pair: ');
+        // console.log(pair);
+        // console.log("key: " + key);
+        // console.log(content[key]);
+
+        const newContent = [...content];
+        // content.slice()
+        newContent[key] = pair;
+        setContent(newContent);
+
+        // console.log('Current Content: ');
+        // console.log(newContent[key]);
+    }
+
+    const renderContent = () => {
+        return content.map((item, key) => {
+            return (
+                <li
+                    className="card">
+                    {renderPair(item, key, addContent)}
+                </li>
+            );
+        })
+    }
+
+    return (
+        <div
+            className="card">
+            {renderTitle()}
             <ul>
-                {pairComps}
-                <li>
-                    <PairForm></PairForm>
-                    <EditableContent onSetText={(text) => { this.setState(text) }} text={this.state.storedText}></EditableContent>
-                    {/* addPair={() => this.addPair() */}
+                <li
+                    className="card">
+                    {renderContent()}
                 </li>
             </ul>
-        );
-    }
+        </div>
+
+        // <div>
+        //     {/* <EditablePair
+        //         key={1}
+        //         pair={title}
+        //         onSet={(pair: Pair, key: number) => updateTitle(pair, key)}
+        //     /> */}
+        //     {renderTitle()}
+        //     <ul>
+        // <EditablePair
+        //             key={2}
+        //             pair={content[0]}
+        //             onSet={(pair: Pair, key: number) => addContent(pair, key)}
+        // {renderContent()}
+        //         
+        //     </ul>
+        // </div>
+    );
 }
 
 export default Card;
