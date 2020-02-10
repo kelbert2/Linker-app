@@ -45,17 +45,20 @@ export class Utils {
         }
     }
 
-
     static generateUID(): string {
         return uuid.v4();
     }
 
     static isPair(val: any): val is Pair {
-        return (val as Pair).label != undefined;
+        return (val as Pair).label != null;
+    }
+
+    static isBlank(val: string) {
+        return val == null || val === '';
     }
 
     static getValueType(value: any): ValueType | null {
-        if (value == undefined) {
+        if (value == null) {
             return null;
         }
         let type: string;
@@ -99,7 +102,24 @@ export class Utils {
     static typeValidation(value: any, valueType: ValueType): boolean {
         return (this.getValueType(value) === valueType);
     }
+
+    static sanitizeInput(value: any) {
+        if (typeof value === 'string') {
+            return value.trim();
+        }
+        return value;
+    }
+
+    static displayDate(value: any) {
+        if (value instanceof Date) {
+
+        }
+
+        return value;
+    }
 }
+
+
 // from Gabe Ragland's https://usehooks.com/useKeyPress/
 export function useKeyPress(targetKey: string) {
     const [keyPressed, setKeyPressed] = useState(false);

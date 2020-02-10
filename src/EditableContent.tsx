@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, Component } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useKeyPress, useOnClickOutside } from './Utils';
 import './index.css';
 /*interface EditableContentProps {
@@ -67,7 +67,7 @@ function editable(WrappedComponent: Component) {
         render() {
             let editOnClick = true;
             const { editing } = this.state;
-            if (this.props.editOnClick !== undefined) {
+            if (this.props.editOnClick !== null) {
                 editOnClick = this.props.editOnClick;
             }
             return (

@@ -1,6 +1,7 @@
-import React, { Component, useState } from 'react';
+import React, { useState } from 'react';
 import { Pair } from './Pair';
 import EditablePair from './EditablePair';
+import { Utils } from './Utils';
 
 export interface CardProperties {
     title: Pair;
@@ -32,7 +33,7 @@ function Card(props: CardProperties) {
     //     storedText: "Placeholder"
     // }
 
-    const history: number = 10;
+    // const history: number = 10;
 
     // handleInteraction(i: number) {
     //     // const content = this.state.content.slice();
@@ -69,22 +70,46 @@ function Card(props: CardProperties) {
 
         const newContent = [...content];
         // content.slice()
-        newContent[key] = pair;
+
+        if (key >= newContent.length) {
+            newContent.push(pair);
+        } else {
+            newContent[key] = pair;
+        }
+
         setContent(newContent);
 
         // console.log('Current Content: ');
         // console.log(newContent[key]);
-    }
 
+        if (content.every(element => (element.label !== '' && element.value !== ''))) {
+            // addContent(new Pair({ label: '', value: '' }), content.length);
+            newContent.push(new Pair({ label: '', value: '' }));
+        }
+    }
+    // TODO: Bug - if type in a single character into label, the Add + button will still display
     const renderContent = () => {
-        return content.map((item, key) => {
-            return (
-                <li
-                    className="card">
-                    {renderPair(item, key, addContent)}
-                </li>
-            );
-        })
+        // Filter out blank items
+        // add an Add Item button but do not save to content
+        let ret = content.map((item, key) => {
+            if (!(Utils.isBlank(item.label) && Utils.isBlank(item.value as string))) {
+                return (
+                    <li
+                        className="card">
+                        {renderPair(item, key, addContent)}
+                    </li>
+                );
+            }
+            return null;
+        });
+
+        ret.push(
+            <li
+                className="card">
+                {renderPair({ label: '', value: '' }, ret.length, addContent)}
+            </li>
+        );
+        return ret;
     }
 
     return (

@@ -20,6 +20,4 @@ class Page extends Component {
         const history = this.state.history;
         const current = history[history.length - 1];
     }
-
-
 }

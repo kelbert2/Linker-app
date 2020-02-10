@@ -13,12 +13,20 @@ body {
   margin: 4rem 10rem;
 }
 
-.editing--hidden,
+.display--hidden,
 .editing-input--hidden {
   display: none;
 }
 
-.editing--active,
+.display--active {
+  width: 100%;
+  min-height: 1em;
+  cursor: pointer;
+
+  transition: all .3s;
+}
+
+.display--active,
 .editing-input--active {
   display: inline-block;
 }
@@ -60,4 +68,12 @@ body {
 .card {
   padding: .75em;
   border-radius: .5em;
+}
+
+.invisible {
+  display: none;
+}
+
+.visible {
+  display: inline-block;
 }

@@ -14,6 +14,7 @@ function EditablePair(props: EditablePair) {
 
     const [isEditing, setEditing] = useState(false);
     const [pair, setPair] = useState(props.pair);
+    const [isFilled, setFilled] = useState(!(Utils.isBlank(props.pair.label) && Utils.isBlank(props.pair.value as string)));
     // const [pair, setPair] = useState(new Pair({ label: 'lab', value: 'val' }));
     // const [isDate, setIsDate] = useState(false);
 
@@ -87,7 +88,10 @@ function EditablePair(props: EditablePair) {
             return (
                 <DatePicker
                     value={pair.value as string}
-                    onChange={e => setPair({ ...pair, value: e.toString() })} />
+                    onChange={e => {
+                        setFilled(!(Utils.isBlank(pair.label) && Utils.isBlank(pair.value as string)));
+                        setPair({ ...pair, value: Utils.sanitizeInput(e.toString()) });
+                    }} />
             );
         } else {
             return (
@@ -95,7 +99,10 @@ function EditablePair(props: EditablePair) {
                     id={uidValue}
                     ref={inputValueRef}
                     value={pair.value as string}
-                    onChange={e => setPair({ ...pair, value: e.target.value })}
+                    onChange={e => {
+                        setFilled(!(Utils.isBlank(pair.label) && Utils.isBlank(pair.value as string)));
+                        setPair({ ...pair, value: Utils.sanitizeInput(e.target.value)});
+                    }}
                     className={`editing--${isEditing ? "active" : "hidden"}`} />
             );
         }
@@ -122,7 +129,6 @@ function EditablePair(props: EditablePair) {
     // }
 
     const renderOptions = () => {
-
         // console.log("rendering options");
 
         return (
@@ -132,27 +138,50 @@ function EditablePair(props: EditablePair) {
                         <option value={index}>{item}</option>
                     );
                 }
-                // return undefined;
+                return null;
             })
         );
     };
 
     const valueTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         // console.log("Selection of value type changed to: " + ValueType[+e.target.value] + ", raw: " + e.target.value);
-
         setPair({ ...pair, valueType: Utils.getValueTypeFromIndex(+e.target.value) });
+    }
+
+    const displayText = (): string => {
+        if (pair.value === '') {
+            if (Utils.isBlank(pair.label)) {
+                // setFilled(false);
+                return '';
+            } else {
+                // setFilled(true);
+                return pair.label;
+            }
+        } else {
+            if (Utils.isBlank(pair.label)) {
+                // setFilled(false);
+                return "Value: " + pair.value;
+            }
+        }
+        // setFilled(true);
+        return pair.label + ': ' + pair.value;
     }
 
     return (
         <div
             ref={wrapperRef}
-            className="pair">
+            className="pair"
+        >
             <span
                 ref={pairRef}
                 onClick={() => setEditing(true)}
-                className={`editing--${!isEditing ? "active" : "hidden"}`}
+                className={`display--${!isEditing ? "active" : "hidden"}`}
             >
-                {props.pair.label}: {props.pair.value}
+                {displayText()}
+                <button
+                    className={`${(isFilled) ? "invisible" : "visible"} waves-effect waves-light btn`}
+                >Add +</button>
+                {/* && pair.value === '' */}
             </span>
             {/* <TextInput
                 label="Label"
@@ -175,7 +204,10 @@ function EditablePair(props: EditablePair) {
                         ref={inputLabelRef}
                         value={pair.label}
                         type="text"
-                        onChange={e => setPair({ ...pair, label: e.target.value })} />
+                        onChange={e => {
+                            setFilled(!(Utils.isBlank(pair.label) && Utils.isBlank(pair.value as string)));
+                            setPair({ ...pair, label: Utils.sanitizeInput(e.target.value) });
+                        }} />
                     <label
                         htmlFor={uidLabel}>
                         Label </label>

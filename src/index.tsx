@@ -2,14 +2,14 @@ import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import * as serviceWorker from './serviceWorker';
-import EditableContent from './EditableContent';
+// import EditableContent from './EditableContent';
 import { Pair } from './Pair';
 import EditablePair from './EditablePair';
 import Card from './Card';
 
 function App() {
     const [storedPair, setStoredPair] = useState(new Pair({ label: "Labelll", value: "Vallluee" }));
-    const [storedText, setStoredText] = useState("Here's some more, edit away!");
+    // const [storedText, setStoredText] = useState("Here's some more, edit away!");
 
     const [storedContent, setStoredContent] = useState([{ label: "lab1", value: "val1" }, { label: "lab2", value: "val2" }] as Pair[]);
 

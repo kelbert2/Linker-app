@@ -1,5 +1,4 @@
 import { Utils, ValueType } from './Utils';
-import React, { Component } from 'react';
 
 // export interface IBasicPair {
 //     label: string;
@@ -19,14 +18,14 @@ export class Pair {
     //     this.valueType = props?.pair.valueType ? props.pair.valueType : ValueType.String;
     // }
     constructor(props?: Pair) {
-        this.label = props?.label ? props.label : "label";
-        this.value = props?.value ? props.value : "value";
+        this.label = props?.label ? props.label : '';
+        this.value = props?.value ? props.value : '';
         this.uid = props?.uid ? props.uid : Utils.generateUID();
         this.valueType = props?.valueType ? props.valueType : ValueType.String;
     }
 
     public toString = () => {
-        return this.label + ": " + this.value;
+        return this.label + ': ' + this.value;
     }
 }
 
