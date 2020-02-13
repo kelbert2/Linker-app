@@ -1,6 +1,107 @@
-button {
+button.nav {
     border: 1px solid #929598;
     background: transparent;
     padding: 8px;
-    size: 12px;
+    font-size: 12px;
 }
+
+.months {
+    display: grid;
+    margin: 32px 0 0;
+    grid-template-columns: repeat(12, 300px);
+    grid-gap: 0 64px;
+}
+
+.months.active-1 {
+    grid-template-columns: repeat(1, 300px);
+}
+
+.months.active-2 {
+    grid-template-columns: repeat(2, 300px);
+}
+
+.months.active-3 {
+    grid-template-columns: repeat(3, 300px);
+}
+
+.months.active-4 {
+    grid-template-columns: repeat(4, 300px);
+}
+
+.months.active-5 {
+    grid-template-columns: repeat(5, 300px);
+}
+
+.months.active-6 {
+    grid-template-columns: repeat(6, 300px);
+}
+
+.months.active-7 {
+    grid-template-columns: repeat(7, 300px);
+}
+
+.months.active-8 {
+    grid-template-columns: repeat(8, 300px);
+}
+
+.months.active-9 {
+    grid-template-columns: repeat(9, 300px);
+}
+
+.months.active-10 {
+    grid-template-columns: repeat(10, 300px);
+}
+
+.months.active-11 {
+    grid-template-columns: repeat(11, 300px);
+}
+
+.week {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    justify-content: center;
+    margin-bottom: 10px;
+    font-size: 10px;
+}
+
+.day-label {
+    text-align: center;
+}
+
+.day {
+    padding: 8px;
+    border: 0;
+}
+
+.day.normal {
+    background: #FFF;
+    color: #001217;
+}
+
+.day.selected {
+    background: #71c9ce;
+    color: #FFF;
+}
+
+.day button.day.selected {}
+
+.day.selectedFirstOrLast {
+    background: #00aeef;
+    color: #FFF;
+}
+
+.day button.selectedFirstOrLast {}
+
+.day.inHoverRange {
+    background: #71c9ed;
+    color: #FFF;
+}
+
+.day button.inHoverRange {}
+
+.day.disabled {
+    background: #FFF;
+    color: #808285;
+}
+
+.day button.disabled {}

@@ -5,19 +5,18 @@ import React from 'react';
 // Pass data without having to manually pass props at every level
 
 export const datepickerContextDefaultValue = {
-    focusedDate: null,
+    focusedDate: null as Date | null,
+    isDateFocused: (date: Date) => false,
+    onDateFocus: (date: Date) => { },
 
-    onDateFocus: () => { },
-    isDateFocused: () => false,
+    isDateSelected: (date: Date) => false,
+    onDateSelect: (date: Date) => { },
 
-    onDateSelect: () => { },
-    isDateSelected: () => false,
+    isDateHovered: (date: Date) => false,
+    onDateHover: (date: Date) => { },
 
-    onDateHover: () => { },
-    isDateHovered: () => false,
-
-    isDateBlocked: () => false,
-    isFirstOrLastSelectedDate: () => false
+    isDateBlocked: (date: Date) => false,
+    isFirstOrLastSelectedDate: (date: Date) => false
 };
 
 export default React.createContext(datepickerContextDefaultValue);

@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Pair } from './Pair';
 import { ValueType, Utils, useKeyPress, useOnClickOutside } from './Utils';
 import { DatePicker } from '@y0c/react-datepicker';
+// import Datepicker from './Datepicker/Datepicker';
 import '@y0c/react-datepicker/assets/styles/calendar.scss';
 
 interface EditablePair {
@@ -92,6 +93,13 @@ function EditablePair(props: EditablePair) {
                         setFilled(!(Utils.isBlank(pair.label) && Utils.isBlank(pair.value as string)));
                         setPair({ ...pair, value: Utils.sanitizeInput(e.toString()) });
                     }} />
+                // <Datepicker
+                //     startDate={pair.value as Date}
+                //     endDate={null}
+                //     onChange={e => {
+                //         setFilled(!(Utils.isBlank(pair.label) && Utils.isBlank(pair.value as string)));
+                //         setPair({ ...pair, value: Utils.sanitizeInput(e.startDate ? e.startDate.toString() : e.toString()) });
+                //     }} />
             );
         } else {
             return (
@@ -101,7 +109,7 @@ function EditablePair(props: EditablePair) {
                     value={pair.value as string}
                     onChange={e => {
                         setFilled(!(Utils.isBlank(pair.label) && Utils.isBlank(pair.value as string)));
-                        setPair({ ...pair, value: Utils.sanitizeInput(e.target.value)});
+                        setPair({ ...pair, value: Utils.sanitizeInput(e.target.value) });
                     }}
                     className={`editing--${isEditing ? "active" : "hidden"}`} />
             );

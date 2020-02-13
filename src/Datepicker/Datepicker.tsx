@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { START_DATE, monthLabelFormat, useDatepicker } from '@datepicker-react/hooks';
+import { START_DATE, useDatepicker } from '@datepicker-react/hooks';
 import Month from './Month';
-import { datepickerContextDefaultValue } from './DatepickerContext';
 import NavButton from './NavButton';
 import DatepickerContext from './DatepickerContext';
 
@@ -9,39 +8,79 @@ interface DatepickerProps {
     startDate: Date | null;
     endDate: Date | null;
     focusedInput?: any;
+
+    rangePicker?: boolean;
+    minDate?: Date;
+    maxDate?: Date;
+    yearPicker?: boolean;
+    monthPicker?: boolean;
+    dayPicker?: boolean;
+}
+interface IChangeable<T> {
+    onChange: (value: T) => any | void;
 }
 
-const Datepicker = () => {
+const Datepicker = (props: DatepickerProps & IChangeable<DatepickerProps>) => {
     const [state, setState] = useState({
-        startDate: null,
-        endDate: null,
-        focusedInput: START_DATE
+        startDate: props.startDate,
+        endDate: props.endDate,
+        focusedInput: START_DATE,
+
+        rangePicker: props.rangePicker ? props.rangePicker : false,
+        minDate: props.minDate,
+        maxDate: props.maxDate,
+        yearPicker: props.yearPicker ? props.yearPicker : true,
+        monthPicker: props.monthPicker ? props.monthPicker : true,
+        dayPicker: props.dayPicker ? props.dayPicker : true
     } as DatepickerProps);
+
+
 
     const handleDateChange = (data: DatepickerProps) => {
         if (!data.focusedInput) {
             setState({ ...data, focusedInput: START_DATE });
+            props.onChange(state);
         } else {
             setState(data);
+            props.onChange(state);
         }
     }
 
+
+    // const {
+    //     firstDayOfWeek,
+    //     activeMonths,
+    //
+    //     isDateSelected,
+    //     isDateHovered,
+    //     isFirstOrLastSelectedDate,
+    //     isDateBlocked,
+    //     isDateFocused,
+    //
+    //     focusedDate,
+    //     onDateHover,
+    //     onDateSelect,
+    //     onDateFocus,
+    //     goToPreviousMonths,
+    //     goToNextMonths
+    //   }
     const {
         firstDayOfWeek,
         activeMonths,
 
-        onDateSelect,
-        isDateSelected,
-
-        onDateHover,
-        isDateHovered,
-
-        onDateFocus,
-        isDateFocused,
         focusedDate,
+        isDateFocused,
+        onDateFocus,
+
+        isDateSelected,
+        onDateSelect,
+
+        isDateHovered,
+        onDateHover,
 
         isDateBlocked,
         isFirstOrLastSelectedDate,
+
         goToPreviousMonths,
         goToNextMonths
     } = useDatepicker({
@@ -51,20 +90,18 @@ const Datepicker = () => {
         onDatesChange: handleDateChange
     });
 
-
-
     return (
         <DatepickerContext.Provider
             value={{
                 focusedDate,
-                onDateFocus,
                 isDateFocused,
+                onDateFocus,
 
-                onDateSelect,
                 isDateSelected,
+                onDateSelect,
 
-                onDateHover,
                 isDateHovered,
+                onDateHover,
 
                 isDateBlocked,
                 isFirstOrLastSelectedDate
@@ -87,7 +124,7 @@ const Datepicker = () => {
             <NavButton onClick={goToNextMonths}>Next</NavButton>
 
             <div
-                className="months">
+                className={`active-${activeMonths} months`}>
                 {activeMonths.map(month => (
                     <Month
                         key={`${month.year}-${month.month}`}

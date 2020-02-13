@@ -2,64 +2,67 @@ import React, { useRef, useContext } from 'react';
 import { useDay } from '@datepicker-react/hooks';
 import DatepickerContext from './DatepickerContext';
 
-const NORMAL_COLOR = '#FFF';
-const SELECTED_COLOR = '#71c9ced';
-const SELECTED_FIRST_OR_LAST_COLOR = '#00aeef';
-const HOVER_RANGE_COLOR = '#71c9ed';
-const DISABLED_COLOR = '#FFF';
+const NORMAL_CLASS = 'normal';
+const SELECTED_CLASS = 'selected';
+const SELECTED_FIRST_OR_LAST_CLASS = 'selectedFirstOrLast';
+const HOVER_RANGE_CLASS = 'inHoverRange';
+const DISABLED_CLASS = 'disabled';
 
-const getColor = (
-    isSelected = false,
-    isSelectedStartOrEnd = false,
-    isWithinHoverRange = false,
-    isDisabled = false
-) => {
-    if (isSelected) {
-        return SELECTED_COLOR;
-    } else if (isSelectedStartOrEnd) {
-        return SELECTED_FIRST_OR_LAST_COLOR;
-    } else if (isWithinHoverRange) {
-        return HOVER_RANGE_COLOR;
-    } else if (isDisabled) {
-        return DISABLED_COLOR;
-    } else {
-        return NORMAL_COLOR;
-    }
-}
+// const getClass = ({
+//     isSelected = false,
+//     isSelectedStartOrEnd = false,
+//     isWithinHoverRange = false,
+//     isDisabled = false
+// }) => {
+//     if (isSelected) {
+//         return SELECTED_CLASS;
+//     } else if (isSelectedStartOrEnd) {
+//         return SELECTED_FIRST_OR_LAST_CLASS;
+//     } else if (isWithinHoverRange) {
+//         return HOVER_RANGE_CLASS;
+//     } else if (isDisabled) {
+//         return DISABLED_CLASS;
+//     } else {
+//         return NORMAL_CLASS;
+//     }
+// }
 
+/*
+In the tutorial:
+function expression
+getColorFn({ color values }) = getColor(booleans) returns({ color values }) => color of the first true boolean;
+booleans come from destructuring Context object
+The getColor booleans are assigned in Day
+*/
 
-getColorFn({ color values }) = getColor(booleans) returns({ color values }) => color;
-booleans come from where ?
+// function getColor(
+//     isSelected = false,
+//     isSelectedStartOrEnd = false,
+//     isWithinHoverRange = false,
+//     isDisabled = false
+// ) {
+//     return ({
+//         selectedFirstOrLastColor,
+//         normalColor,
+//         selectedColor,
+//         rangeHoverColor,
+//         disabledColor
+//     }) => {
+//         if (isSelectedStartOrEnd) {
+//             return selectedFirstOrLastColor;
+//         } else if (isSelected) {
+//             return selectedColor;
+//         } else if (isWithinHoverRange) {
+//             return rangeHoverColor;
+//         } else if (isDisabled) {
+//             return disabledColor;
+//         } else {
+//             return normalColor;
+//         }
+//     };
+// }
 
-
-    function getColor(
-        isSelected = false,
-        isSelectedStartOrEnd = false,
-        isWithinHoverRange = false,
-        isDisabled = false
-    ) {
-        return ({
-            selectedFirstOrLastColor,
-            normalColor,
-            selectedColor,
-            rangeHoverColor,
-            disabledColor
-        }) => {
-            if (isSelectedStartOrEnd) {
-                return selectedFirstOrLastColor;
-            } else if (isSelected) {
-                return selectedColor;
-            } else if (isWithinHoverRange) {
-                return rangeHoverColor;
-            } else if (isDisabled) {
-                return disabledColor;
-            } else {
-                return normalColor;
-            }
-        };
-    }
-
-const Day = ({ daylabel, date }) => {
+const Day = ({ dayLabel, date }: { dayLabel: string, date: Date }) => {
     const {
         onDateFocus,
         focusedDate,
@@ -101,27 +104,27 @@ const Day = ({ daylabel, date }) => {
         return (<div></div>);
     }
 
-    const getColorFn = getColor(
-        isSelected,
-        isSelectedStartOrEnd,
-        isWithinHoverRange,
-        disabledDate
-    );
+    // const getColorFn = getColor(
+    //     isSelected,
+    //     isSelectedStartOrEnd,
+    //     isWithinHoverRange,
+    //     disabledDate
+    // );
 
     const getDayClass = (isSelected = false,
         isSelectedStartOrEnd = false,
         isWithinHoverRange = false,
         disabledDate = false) => {
         if (isSelected) {
-            return "selected";
+            return SELECTED_CLASS;
         } else if (isSelectedStartOrEnd) {
-            return "selectedStartOrEnd";
+            return SELECTED_FIRST_OR_LAST_CLASS;
         } else if (isWithinHoverRange) {
-            return "withinHoverRange";
+            return HOVER_RANGE_CLASS;
         } else if (disabledDate) {
-            return "disabled";
+            return DISABLED_CLASS;
         } else {
-            return "";
+            return NORMAL_CLASS;
         }
     }
 
@@ -133,9 +136,15 @@ const Day = ({ daylabel, date }) => {
             onMouseEnter={onMouseEnter}
             tabIndex={tabIndex}
             ref={dayRef}
-            className={getDayClass(isSelected, isSelectedStartOrEnd, isWithinHoverRange, disabledDate)}
+            className={`${getDayClass(
+                isSelected,
+                isSelectedStartOrEnd,
+                isWithinHoverRange,
+                disabledDate)} day`}
         >
             {dayLabel}
         </button>
     );
 }
+
+export default Day;
