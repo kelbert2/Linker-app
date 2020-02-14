@@ -1,12 +1,10 @@
 // https://blog.logrocket.com/react-datepicker-217b4aa840da/
 
-
-
 export interface DateData {
-    startDate: Date | null;
+    date: Date | null;
+    beginDate: Date | null;
     endDate: Date | null;
 }
-
 
 // Display
 export const WEEK_DAY_LABELS = ["Su", "M", "T", "W", "Th", "F", "S"];
@@ -61,7 +59,7 @@ export const getDateISO = (date = new Date()) => {
     ].join('-');
 }
 
-export const sameMonth = (date: Date, baseDate = new Date() as ) => {
+export const sameMonth = (date: Date, baseDate = new Date()) => {
     if (!(isDate(date) && isDate(baseDate))) return false;
 
     return (date.getMonth() === baseDate.getMonth())

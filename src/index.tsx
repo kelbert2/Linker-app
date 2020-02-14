@@ -6,6 +6,8 @@ import * as serviceWorker from './serviceWorker';
 import { Pair } from './Pair';
 import EditablePair from './EditablePair';
 import Card from './Card';
+import { DatepickerContextProvider } from './custom-datepicker/DatepickerContext';
+import Month from './custom-datepicker/Month';
 
 function App() {
     const [storedPair, setStoredPair] = useState(new Pair({ label: "Labelll", value: "Vallluee" }));
@@ -42,7 +44,10 @@ function App() {
             {/* <div>
                 <EditableContent text={storedText} onSetText={text => setStoredText(text)} />
             </div> */}
-        </div>
+
+
+            <DatepickerContextProvider><Month></Month></DatepickerContextProvider>
+        </div >
     );
 }
 

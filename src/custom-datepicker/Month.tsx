@@ -1,72 +1,97 @@
+import React, { useContext, useState } from 'react';
+import Day from './Day';
 import DatepickerContext from './DatepickerContext';
-import { CURRENT_MONTH } from './DatepickerUtils';
-import React, { useState } from 'react';
-import { DateData, MONTH_LABELS } from './DatepickerUtils';
-import { stat } from 'fs';
+import { DAYS_PER_WEEK, WEEKDAY_NAMES, getYear, getMonth, createDate, getDaysPerMonth, getFirstDateOfMonth, getFirstWeekOffset, getDateISO } from './CalendarUtils';
+// : { year: number, month: number, firstDayOfWeek?: 0 | 1 | 2 | 3 | 4 | 5 | 6 }
+function Month({ year = getYear(new Date()), month = getMonth(new Date()), firstDayOfWeek = 0 as 0 | 1 | 2 | 3 | 4 | 5 | 6 }) {
+    const {
+        dateChange,
+        dateInput,
 
-interface MonthProps {
-    selectedDate: Date | null,
-    todayDate: Date | null,
+        formatMonthText
+    } = useContext(DatepickerContext);
 
-    dateChange: (d: DateData) => {},
-    daySelected: (d: DateData) => {},
+    const [days, setDays] = useState([[]] as [JSX.Element[]]);
 
-    startAt: Date | null,
-
-    minDate: Date | null,
-    maxDate: Date | null,
-    dateFilter: (date: Date | null) => boolean,
-
-    rangeMode: boolean,
-    beginDate: Date | null,
-    endDate: Date | null,
-
-
-    formatMonthLabel: (date: Date) => string,
-    formatMonthText: (date: Date) => string,
-}
-
-function Month(props: MonthProps) {
-
-    const [state, setState] = useState({
-        selectedDate: props.selectedDate ? props.selectedDate : new Date(),
-        todayDate: props.todayDate ? props.todayDate : new Date(),
-
-        dateChange: (d: DateData) => { },
-        daySelected: (d: DateData) => { },
-
-        startAt: props.startAt ? props.startAt : new Date(),
-
-        minDate: props.minDate,
-        maxDate: props.maxDate,
-        dateFilter: props.dateFilter ? props.dateFilter : (date: Date | null) => true,
-
-        rangeMode: props.rangeMode ? props.rangeMode : false,
-        beginDate: props.beginDate ? props.beginDate : new Date(),
-        endDate: props.endDate ? props.endDate : new Date(),
-
-        formatMonthLabel: props.formatMonthLabel ? props.formatMonthLabel : (date: Date) => MONTH_LABELS[date.getMonth()],
-        formatMonthText: props.formatMonthText ? props.formatMonthText : (date: Date) => MONTH_LABELS[date.getMonth()],
-
-    } as MonthProps);
-
-    // ClampDate
-    const validDate = (date: Date) => {
-        if (state.rangeMode) {
-            if (state.minDate) {
-                if (date < state.minDate) {
-                    return false;
-                }
+    const createDays = () => {
+        const daysInMonth = getDaysPerMonth(month, year);
+        // const dateNames = this._dateAdapter.getDateNames();
+        let weeks = [[]] as [JSX.Element[]];
+        const firstDayOfMonth = getFirstDateOfMonth(month, year);
+        const firstWeekOffset = getFirstWeekOffset(firstDayOfMonth);
+        for (let i = 0, cell = firstWeekOffset; i < daysInMonth; i++ , cell++) {
+            if (cell === DAYS_PER_WEEK) {
+                // created a week, move to the next row
+                weeks.push([]);
+                cell = 0;
             }
-            if (state.maxDate) {
-                if (date > state.maxDate) {
-                    return false;
-                }
-            }
+            // const date = createDate(getYear(firstDayOfMonth), getMonth(firstDayOfMonth), i + 1);
+            // const enabled = this._shouldEnableDate(date);
+            // const ariaLabel = this._dateAdapter.format(date, this._dateFormats.display.dateA11yLabel);
+            // const cellClasses = this.dateClass ? this.dateClass(date) : undefined;
+
+            //     weeks[weeks.length - 1]
+            //         .push(new Cell(i + 1, dateNames[i], ariaLabel, enabled, cellClasses));
+            weeks[weeks.length - 1].push(
+                createDay(cell, i)
+            );
         }
-
-
-        return true;
+        setDays(weeks);
     }
 
+    const createWeek = (days: JSX.Element[], index: number) => {
+        return (
+            <tr>
+                {days.map((day, dayIndex) => { return day; })}
+            </tr>
+        )
+    }
+    const createDay = (weekdayIndex: number, dayOfMonth: number) => {
+        return (
+            <td><Day
+                dayLabel={WEEKDAY_NAMES[weekdayIndex].short}
+                date={createDate(year, month, dayOfMonth)}
+            ></Day></td>
+            // key={getDateISO(createDate(year, month, dayOfMonth))}
+        );
+    }
+
+    const renderWeekdayLabels = () => {
+        return (
+            <tr
+                className="week-labels">
+                {WEEKDAY_NAMES.map(dayLabel => (
+                    <th
+                        key={dayLabel.long}>
+                        {dayLabel.short}
+                    </th>
+                ))}
+            </tr>
+        );
+    }
+
+    const renderDays = () => {
+        createDays();
+        return (
+            <tr
+                className="days">
+                {days.map((week, weekIndex) => {
+                    return createWeek(week, weekIndex);
+                })}
+                <td></td>
+            </tr>
+        );
+    };
+
+    return (
+        <div>
+            <tr>
+                <td>{formatMonthText(createDate(year, month))}</td>
+            </tr>
+            {renderWeekdayLabels()}
+            {renderDays()}
+        </div>
+    );
 }
+
+export default Month;
