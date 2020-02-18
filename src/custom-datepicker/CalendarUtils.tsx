@@ -25,9 +25,11 @@ export const WEEKDAY_NAMES = [
     { long: 'Saturday', short: 'S' }
 ] as dayName[];
 
+// create
 export const createDate = (year: number, month: number, day = 1) => {
     return new Date(year, month, day);
 }
+// get Date
 export const getYear = (date: Date) => {
     return date.getFullYear();
 }
@@ -37,9 +39,19 @@ export const getMonth = (date: Date) => {
 export const getDay = (date: Date) => {
     return date.getDay();
 }
+export const getDateISO = (date = new Date()) => {
+    if (!isDate(date)) return null;
+    return [
+        date.getFullYear(),
+        zeroPad(+date.getMonth(), 2),
+        zeroPad(+date.getDate(), 2)
+    ].join('-');
+}
+// get day
 export const getDayOfWeek = (date: Date) => {
     return date.getDay();
 }
+// get month
 export const getFirstDayOfWeek = () => {
     return 0;
 }
@@ -48,6 +60,13 @@ export const getFirstDateOfMonth = (month = CURRENT_MONTH, year = CURRENT_YEAR) 
 }
 export const getFirstWeekOffset = (firstOfMonth: Date) => {
     return (DAYS_PER_WEEK + getDayOfWeek(firstOfMonth) - getFirstDayOfWeek()) % DAYS_PER_WEEK;
+}
+export const getPrevMonth = (month: number, year: number) => {
+    return { month: (month - 1) % 12, year: (month > 0) ? year - 1 : year };
+}
+
+export const getNextMonth = (month: number, year: number) => {
+    return { month: (month + 1) % 12, year: (month < 11) ? year : year + 1 };
 }
 
 // Month is 0-based
@@ -59,24 +78,34 @@ export const getDaysPerMonth = (month = CURRENT_MONTH, year = CURRENT_YEAR) => {
         ? leapYear ? 29 : 28
         : monthsWith30.includes(month) ? 30 : 31);
 }
+
+// 
+
+// validation
 export const isDate = (date: string | Date) => {
     const isDate = Object.prototype.toString.call(date) === '[object Date]';
     const isValidDate = date && !Number.isNaN(date.valueOf() as number);
     // TODO: check this
     return isDate && isValidDate;
 }
+export const sameMonth = (date: Date, baseDate = new Date()) => {
+    if (!(isDate(date) && isDate(baseDate))) return false;
+
+    return (date.getMonth() === baseDate.getMonth())
+        && (date.getFullYear() === baseDate.getFullYear());
+}
+
+export const sameDay = (date: Date, baseDate = new Date()) => {
+    if (!(isDate(date) && isDate(baseDate))) return false;
+    return (date.getDate() === baseDate.getDate()) && sameMonth(date, baseDate)
+}
+// tools
 export const zeroPad = (value: string | number, length: number) => {
     return `${value}`.padStart(length, '0');
 }
-export const getDateISO = (date = new Date()) => {
-    if (!isDate(date)) return null;
-    return [
-        date.getFullYear(),
-        zeroPad(+date.getMonth(), 2),
-        zeroPad(+date.getDate(), 2)
-    ].join('-');
-}
+// comparison
 
+// Calendar
 export const addCalendarYears = (date: Date, add: number) => {
     return new Date(getYear(date) + add, getMonth(date), getDay(date));
 }

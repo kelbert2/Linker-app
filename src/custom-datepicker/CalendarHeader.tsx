@@ -2,8 +2,12 @@ import React, { useContext, useState } from 'react';
 import DatepickerContext from './DatepickerContext';
 import { getYear, getMonth, VIEW, addCalendarMonths, addCalendarYears, YEARS_PER_PAGE } from './CalendarUtils';
 
-function Calendar() {
-    const {
+interface CalenderHeaderProps {
+    currentView: VIEW,
+    setCurrentView: (view: VIEW) => {} | void
+}
+function CalendarHeader({ currentView, setCurrentView }: CalenderHeaderProps) {
+    let {
         selectedDate,
         todayDate,
         activeDate,
@@ -51,7 +55,7 @@ function Calendar() {
         switchToMultiYearViewLabel
     } = useContext(DatepickerContext);
 
-    const [currentView, setCurrentView] = useState(startView);
+    // const [currentView, setCurrentView] = useState(startView);
 
 
 
@@ -59,7 +63,7 @@ function Calendar() {
     const isSameView = (date1: Date, date2: Date) => {
         if (currentView === 'month') {
             return getYear(date1) === getYear(date2) &&
-                getMonth(date1) == getMonth(date2);
+                getMonth(date1) === getMonth(date2);
         }
         if (currentView === 'year') {
             return getYear(date1) === getYear(date2);
@@ -70,29 +74,30 @@ function Calendar() {
     }
 
     const getHeaderLabel = () => {
-        if (currentView == 'month') {
+        if (currentView === 'month') {
             // return this._dateAdapter
             //     .format(this.calendar.activeDate, this._dateFormats.display.monthYearLabel)
             //     .toLocaleUpperCase();
             return formatMonthLabel(activeDate ? activeDate : new Date());
         }
-        if (currentView == 'year') {
+        if (currentView === 'year') {
             return getYear(activeDate ? activeDate : new Date());
         }
 
         // The offset from the active year to the "slot" for the starting year is the
         // *actual* first rendered year in the multi-year view, and the last year is
         // just yearsPerPage - 1 away.
-        // const activeYear = getYear(activeDate ? activeDate : new Date());
-        // const minYearOfPage = activeYear - getActiveOffset(
-        //     this._dateAdapter, this.calendar.activeDate, this.calendar.minDate, this.calendar.maxDate);
-        // const maxYearOfPage = minYearOfPage + yearsPerPage - 1;
-        // return `${minYearOfPage} \u2013 ${maxYearOfPage}`;
+
+        const activeYear = getYear(activeDate ? activeDate : new Date());
+        const minYearOfPage = activeYear - getActiveOffset(
+            activeDate, minDate, maxDate);
+        const maxYearOfPage = minYearOfPage + yearsPerPage - 1;
+        return `${minYearOfPage} \u2013 ${maxYearOfPage}`;
         // TODO: get active offset from multi-year view
     }
 
     const getPeriodButtonLabel = () => {
-        return currentView == 'month' ?
+        return currentView === 'month' ?
             switchToMultiYearViewLabel : switchToMonthViewLabel;
     }
 
@@ -153,28 +158,23 @@ function Calendar() {
     }
 
     /** Handles user clicks on the previous button. */
-    // const previousClicked = () => {
-    //     activeDate = currentView === 'month' ?
-    //         addCalendarMonths(activeDate, -1) :
-    //         addCalendarYears(activeDate, currentView === 'year' ? -1 : -YEARS_PER_PAGE);
+    const previousClicked = () => {
+        currentPeriodClicked();
+        activeDate = currentView === 'month' ?
+            addCalendarMonths(activeDate, -1) :
+            addCalendarYears(activeDate, currentView === 'year' ? -1 : -YEARS_PER_PAGE);
+    }
 
-
-    //     // this._dateAdapter.addCalendarMonths(this.calendar.activeDate, -1) :
-    //     // this._dateAdapter.addCalendarYears(
-    //     //     this.calendar.activeDate, this.calendar.currentView == 'year' ? -1 : -yearsPerPage
-    //     // );
-
-    // }
-
-    // /** Handles user clicks on the next button. */
-    // const nextClicked = () => {
-    //     activeDate = currentView === 'month' ?
-    //         addCalendarMonths(activeDate, 1) :
-    //         addCalendarYears(
-    //             activeDate,
-    //             currentView === 'year' ? 1 : YEARS_PER_PAGE
-    //         );
-    // }
+    /** Handles user clicks on the next button. */
+    const nextClicked = () => {
+        currentPeriodClicked();
+        activeDate = currentView === 'month' ?
+            addCalendarMonths(activeDate, 1) :
+            addCalendarYears(
+                activeDate,
+                currentView === 'year' ? 1 : YEARS_PER_PAGE
+            );
+    }
 
     /** Whether the previous period button is enabled. */
     const previousEnabled = () => {
@@ -190,4 +190,23 @@ function Calendar() {
         return !maxDate ||
             !isSameView(activeDate, maxDate);
     }
+
+    return (
+        <div
+            className="header">
+            <button
+                onClick={previousClicked}
+                disabled={!previousEnabled}
+                className="left"
+            ></button>
+            {getHeaderLabel()}
+            <button
+                onClick={nextClicked}
+                disabled={!nextEnabled}
+                className="right"
+            ></button>
+        </div>
+    );
 }
+
+export default CalendarHeader;
